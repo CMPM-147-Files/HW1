@@ -34,7 +34,7 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
 		g.triangle(x, y + 24, x + 9, y + 17, x + 14, y + 28); // Right Leg
     }
 
-    function pixelStreak(g) {
+    function pixelVortex(g) {
         var offset = Math.floor(Math.random() * 100);
         g.loadPixels();
         var pixelArray = g.pixels.toArray();
@@ -42,11 +42,12 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
         var x = Math.floor(Math.random() * g.width);
         var y = Math.floor(Math.random() * g.height);
 
-        // Move a bunch of pixels to the right by 30 (wraparound)
         for (var i = 0; i < 1000; i++) {
             var index = x + y * g.width + i;
             pixelArray[index] = pixelArray[index + offset];
         }
+		
+		console.log (x + " " + y + " " + g.width)
 
         g.pixels.set(pixelArray);
         g.updatePixels();
@@ -137,9 +138,6 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
                     // HW Functions
 					
 					/*
-						Holding down ‘1’ draws something randomly distributed on screen
-							Try Stars for now
-						
 						Holding down ‘2’ does something to the pixel buffer (see code!)
 							4 Pointed star like object rotation to displace colors
 						
@@ -152,7 +150,7 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
                     }
 					
                     if (app.key === 2) {
-						pixelStreak(g);
+						pixelVortex(g);
                     }
 					
 					if (app.key === 3) {
