@@ -20,12 +20,18 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
         }
     };
 
-    function randomDot(g) {
+    function randomStars(g) {
         var x = Math.floor(Math.random() * g.width);
         var y = Math.floor(Math.random() * g.height);
-        g.fill(Math.random(), 1, 1, .4);
+        g.fill(0.2, 1, 1, .4);
         g.noStroke();
-        g.ellipse(x, y, 100, 100);
+		
+		// Draws a star, third arithmetic is to expand triangles to fill in the middle
+		g.triangle(x, y, x - 5, y + 10, x + 5, y + 10); // Head
+		g.triangle(x - 5 + 5, y + 10, x - 18, y + 10, x - 9 + 9, y + 18 + 6); // Left Arm
+		g.triangle(x + 5 - 5, y + 10, x + 18, y + 10, x + 9 - 9, y + 18 + 6); // Right Arm
+		g.triangle(x, y + 24, x - 9, y + 17, x - 14, y + 28); // Left Leg
+		g.triangle(x, y + 24, x + 9, y + 17, x + 14, y + 28); // Right Leg
     }
 
     function pixelStreak(g) {
@@ -45,6 +51,10 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
         g.pixels.set(pixelArray);
         g.updatePixels();
     }
+	
+	function summonOrbs(g) {
+		
+	}
 
     // Lets add some functions to the app object!
     $.extend(app, {
@@ -84,23 +94,14 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
                 // Tell processing to define ellipses as a center and a radius
                 g.ellipseMode(g.CENTER_RADIUS);
 
-                // Start with a black background
-                // g.background(.5);
-
                 // You can specify backgrounds with one value, for greyscale,
                 //  g.background(.65);
 
                 // or with 3 for HSB (or whatever color mode you are using)
 
-                // You can even have a background that is *transparent*
-                // g.background(0, 0, 0, 0);
-
-                // Set processing's draw function
-
-                g.background(.14, .4, .9);
+                g.background(.1);
 
                 // [TODO] Create a particle here
-
 				g.noStroke();
 			
 				var myParticle = [];
@@ -109,10 +110,6 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
 					myParticle[i] = new Particle();
 				}
 				
-				
-                for (var i = 0; i < 50; i++) {
-                 //   randomDot(g);
-                }
                 g.draw = function() {
 
                     // Update time
@@ -120,12 +117,10 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
 
                     // [TODO] Update a particle here
 					for (var i = 0; i < particleCount; i++) {
-						myParticle[i].update(time);
+					//	myParticle[i].update(time);
 					}
 					
                     g.fill(.5, .2, .1, .01);
-                    //   g.rect(0, 0, w, h);
-
 					
                     // Move to the center of the canvas
                     g.pushMatrix();
@@ -133,21 +128,37 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
 					
                     // [TODO] Draw a particle here
 					for (var i = 0; i < particleCount; i++) {
-						myParticle[i].draw(g);
+				//		myParticle[i].draw(g);
 					}
 					
 					
                     g.popMatrix();
 
                     // HW Functions
-                    /*
-                     if (app.key === 1) {
-                     randomDot(g);
-                     }
-                     if (app.key === 2) {
-                     pixelStreak(g);
-                     }
-                     */
+					
+					/*
+						Holding down ‘1’ draws something randomly distributed on screen
+							Try Stars for now
+						
+						Holding down ‘2’ does something to the pixel buffer (see code!)
+							4 Pointed star like object rotation to displace colors
+						
+						Pressing ‘3’ creates some particles
+							Particles that gravitate around a random point(s)
+					*/
+                    
+                    if (app.key === 1) {
+						randomStars(g);
+                    }
+					
+                    if (app.key === 2) {
+						pixelStreak(g);
+                    }
+					
+					if (app.key === 3) {
+						// summonOrbs(g);
+					}
+                     
 
                 };
             });
