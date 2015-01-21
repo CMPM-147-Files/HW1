@@ -55,7 +55,7 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
         g.updatePixels();
     }
 	
-	function summonOrbs(g, myParticle) {
+	function summonOrbs(g, myParticle, gravFieldX, gravFieldY) {
 		
 		while (myParticle.length < 50) {
 			myParticle[myParticle.length] = new Particle(g);
@@ -73,21 +73,11 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
 	}
 
     // Lets add some functions to the app object!
-    $.extend(app, {
 
         mouse : new Vector(),
         dimensions : new Vector(),
 
         init : function() {
-            console.log("Hello, World.");
-
-            // Make a particle system (for later in the tutorial)
-           // var particleSystem = new ParticleSystem();
-
-          //  for (var i = 0; i < 10; i++) {
-            //    particleSystem.add(new Particle());
-          //  }
-
             // Get the canvas element
             // Note that this is the jquery selector, and not the DOM element (which we need)
             // myJQuerySelector.get(0) will return the canvas element to pass to processing
@@ -121,6 +111,8 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
 				g.noStroke();
 			
 				var myParticle = [];
+				var gravFieldX = null;
+				var gravFieldY = null;
 				
                 g.draw = function() {
 
@@ -159,9 +151,15 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
                     }
 					
 					if (app.key === 3) {
-						summonOrbs(g, myParticle);
+						if (gravFieldX === null) {
+							gravFieldX = Math.random() * g.width;
+							gravFieldY = Math.random() * g.height;
+						}
+						summonOrbs(g, myParticle, gravFieldX, gravFieldY);
 					} else if (myParticle.length > 0) {
 						myParticle.length = 0;
+						gravFieldX = null;
+						gravFieldY = null;
 					}
                      
 
