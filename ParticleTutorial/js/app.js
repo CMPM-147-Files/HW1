@@ -63,7 +63,7 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
 		
 		 // [TODO] Update a particle here
 		for (var i = 0; i < myParticle.length; i++) {
-			myParticle[i].update(time);
+			myParticle[i].update(time, gravFieldX, gravFieldY);
 		}
 		
 		// [TODO] Draw a particle here
@@ -73,6 +73,7 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
 	}
 
     // Lets add some functions to the app object!
+    $.extend(app, {
 
         mouse : new Vector(),
         dimensions : new Vector(),

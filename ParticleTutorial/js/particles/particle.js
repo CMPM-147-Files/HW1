@@ -3,7 +3,7 @@ define(["inheritance", "common"], function(_inheritance, common) {'use strict';
 	
         init : function(g) {
 			g.fill(Math.random(), 1, 1, .1);
-			this.position = new Vector((Math.random() * g.width) - 100, (Math.random() * g.height) - 100);
+			this.position = new Vector(Math.random() * g.width, Math.random() * g.height);
 			this.velocity = new Vector(Math.random() * 6 - 3, Math.random() * 6 - 3);
 			this.acceleration = new Vector(Math.random() * 100 - 50, Math.random() * 100 - 50);
 			
@@ -12,7 +12,7 @@ define(["inheritance", "common"], function(_inheritance, common) {'use strict';
 
         // Figure out the forces on the particle, how to change the velocity, 
         // and then move it somewhere.  The Vector library has many functions that may be useful here
-        update : function(time) {
+        update : function(time, gravFieldX, gravFieldY) {
 			this.position.addMultiple(this.velocity, time.elapsed);
 			this.velocity.addMultiple(this.acceleration, time.elapsed);
 			// this.acceleration.mult(-2 * time.elapsed);
