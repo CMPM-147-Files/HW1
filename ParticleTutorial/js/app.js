@@ -42,9 +42,9 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
         var x = Math.floor(Math.random() * g.width);
         var y = Math.floor(Math.random() * g.height);
 
-        for (var i = 1; i < 500; i++) {
-            var index1 = parseInt(x * Math.log(i)) + parseInt(y * Math.log(i)) * g.width + i;
-			var index2 = parseInt(x * Math.log(i)) + parseInt(y * Math.log(i)) * g.width - i;
+        for (var i = 2; i < 500; i++) {
+            var index1 = parseInt(x * (1/Math.log(i)) * 4) + parseInt(y * (1/Math.log(i)) * 4) * g.width + i;
+			var index2 = parseInt(x * (1/Math.log(i)) * 4) + parseInt(y * (1/Math.log(i)) * 4) * g.width - i;
             pixelArray[index1] = pixelArray[x + y * g.width + i];
 			pixelArray[index2] = pixelArray[x + y * g.width - i];
         }
@@ -112,8 +112,7 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
 				g.noStroke();
 			
 				var myParticle = [];
-				var gravFieldX = null;
-				var gravFieldY = null;
+				var gravField = new Vector(0, 0);
 				
                 g.draw = function() {
 
@@ -134,15 +133,6 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
                     g.popMatrix();
 
                     // HW Functions
-					
-					/*
-						Holding down ‘2’ does something to the pixel buffer (see code!)
-							4 Pointed star like object rotation to displace colors
-						
-						Pressing ‘3’ creates some particles
-							Particles that gravitate around a random point(s)
-					*/
-                    
                     if (app.key === 1) {
 						randomStars(g);
                     }
@@ -152,15 +142,14 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
                     }
 					
 					if (app.key === 3) {
-						if (gravFieldX === null) {
-							gravFieldX = Math.random() * g.width;
-							gravFieldY = Math.random() * g.height;
+						if (gravField.x === 0) {
+							gravField = new Vector(Math.random() * g.width, Math.random() * g.height);
 						}
-						summonOrbs(g, myParticle, gravFieldX, gravFieldY);
+						summonOrbs(g, myParticle, gravField);
 					} else if (myParticle.length > 0) {
 						myParticle.length = 0;
-						gravFieldX = null;
-						gravFieldY = null;
+						gravField.x = 0;
+						gravField.y = 0;
 					}
                      
 
