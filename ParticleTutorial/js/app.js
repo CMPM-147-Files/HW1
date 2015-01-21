@@ -23,7 +23,7 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
     function randomStars(g) {
         var x = Math.floor(Math.random() * g.width);
         var y = Math.floor(Math.random() * g.height);
-        g.fill(0.2, 1, 1, .4);
+        g.fill(0.2, 1, Math.random(), .4);
         g.noStroke();
 		
 		// Draws a star, third arithmetic is to expand triangles to fill in the middle
@@ -35,26 +35,41 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
     }
 
     function pixelVortex(g) {
-        var offset = Math.floor(Math.random() * 100);
+        var offset = Math.floor(Math.random() * 50);
         g.loadPixels();
         var pixelArray = g.pixels.toArray();
 
         var x = Math.floor(Math.random() * g.width);
         var y = Math.floor(Math.random() * g.height);
 
-        for (var i = 0; i < 1000; i++) {
-            var index = x + y * g.width + i;
-            pixelArray[index] = pixelArray[index + offset];
+        for (var i = 1; i < 500; i++) {
+            var index1 = parseInt(x * Math.log(i)) + parseInt(y * Math.log(i)) * g.width + i;
+			var index2 = parseInt(x * Math.log(i)) + parseInt(y * Math.log(i)) * g.width - i;
+            pixelArray[index1] = pixelArray[x + y * g.width + i];
+			pixelArray[index2] = pixelArray[x + y * g.width - i];
         }
 		
-		console.log (x + " " + y + " " + g.width)
+		console.log("ran");
 
         g.pixels.set(pixelArray);
         g.updatePixels();
     }
 	
-	function summonOrbs(g) {
+	function summonOrbs(g, myParticle) {
 		
+		while (myParticle.length < 50) {
+			myParticle[myParticle.length] = new Particle(g);
+		}
+		
+		 // [TODO] Update a particle here
+		for (var i = 0; i < myParticle.length; i++) {
+			myParticle[i].update(time);
+		}
+		
+		// [TODO] Draw a particle here
+		for (var i = 0; i < myParticle.length; i++) {
+			myParticle[i].draw(g);
+		}
 	}
 
     // Lets add some functions to the app object!
@@ -106,31 +121,21 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
 				g.noStroke();
 			
 				var myParticle = [];
-				var particleCount = 50;
-				for (var i = 0; i < particleCount; i++) {
-					myParticle[i] = new Particle();
-				}
 				
                 g.draw = function() {
 
                     // Update time
                     time.updateTime();
 
-                    // [TODO] Update a particle here
-					for (var i = 0; i < particleCount; i++) {
-					//	myParticle[i].update(time);
-					}
+                   
 					
-                    g.fill(.5, .2, .1, .01);
+                 //   g.fill(.5, .2, .1, .01);
 					
                     // Move to the center of the canvas
                     g.pushMatrix();
                     g.translate(w / 2, h / 2);
 					
-                    // [TODO] Draw a particle here
-					for (var i = 0; i < particleCount; i++) {
-				//		myParticle[i].draw(g);
-					}
+             
 					
 					
                     g.popMatrix();
@@ -154,7 +159,9 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
                     }
 					
 					if (app.key === 3) {
-						// summonOrbs(g);
+						summonOrbs(g, myParticle);
+					} else if (myParticle.length > 0) {
+						myParticle.length = 0;
 					}
                      
 
